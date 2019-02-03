@@ -1,9 +1,17 @@
-let connect = require('connect');
-const { login } = require('./authorization/authorization');
-let app = connect();
+const connect = require('connect');
+const bodyParser = require('body-parser');
+const { login, signUp } = require('./authorization/authorization');
+const { initMongo } = require('./mongo/mongoose');
+const app = connect();
 const port = 3000;
 
+initMongo();
+
 app
-	.use('/login', login)
-	.listen(port);
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({ extended: true }))
+  .use('/signup', signUp)
+  .use('/login', login)
+  .listen(port);
+
 console.log(`Server listening on port ${port}.`);
