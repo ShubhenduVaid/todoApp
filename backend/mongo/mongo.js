@@ -9,13 +9,13 @@ function initMongo(callback) {
       callback(error);
     } else {
       database = client.db('admin');
-      collection = database.collection('todo');
+      collection = database.collection('users');
       callback(undefined, 'Mongo Started');
     }
   });
 }
 
-function signUpUser(userObject, callback) {
+function signupUser(userObject, callback) {
   isUserExist(userObject, (error, status) => {
     if (error) {
       callback(error);
@@ -23,16 +23,20 @@ function signUpUser(userObject, callback) {
       if (status) {
         callback(undefined, status);
       } else {
-        collection.insertOne(userObject, (error, result) => {
-          if (error) {
-            callback(error);
-          } else {
-            callback(undefined, status);
-          }
-        })
+        insertSingleUser(userObject, callback, status);
       }
     }
   });
+}
+
+function insertSingleUser(userObject, callback, status) {
+  collection.insertOne(userObject, (error) => {
+    if (error) {
+      callback(error);
+    } else {
+      callback(undefined, status);
+    }
+  })
 }
 
 function isUserExist(userObject, callback) {
@@ -49,6 +53,5 @@ function isUserExist(userObject, callback) {
   })
 }
 
-
 module.exports.initMongo = initMongo;
-module.exports.signUpUser = signUpUser;
+module.exports.signupUser = signupUser;
