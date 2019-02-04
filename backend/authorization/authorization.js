@@ -1,6 +1,8 @@
 const { unauthorized } = require('./../responses/error');
 const { authorized } = require('./../responses/success');
-const { userCredentialsModel } = require('./../mongo/mongoose');
+const { userCredentialsModel } = require('./../mongo/mongo');
+const { signUpUser } = require('./../mongo/mongo');
+const { successMessage } = require('./../responses/success');
 
 function login(request, response, next) {
   if (request.method === 'POST') {
@@ -23,9 +25,26 @@ function login(request, response, next) {
 }
 
 function signUp(request, response, next) {
-  if (request.method === 'POST') {
-    let userData = new userCredentialsModel(request.body);
-    console.log(userData);
+  if (request.method === 'POST' && request.body) {
+    console.log(`
+    User Set =>
+    Username : ${request.body.username}
+    Password : ${request.body.password}
+    `);
+    signUpUser(request.body, (error, status) => {
+      if (error) {
+        console.log(error);
+        throw new Error('Technical Error');
+      } else {
+        if (status) {
+          successMessage(response, 'User Already Exist');
+        } else {
+          successMessage(response, 'User Added Successfully');
+        }
+      }
+    });
+  } else {
+    next();
   }
 }
 

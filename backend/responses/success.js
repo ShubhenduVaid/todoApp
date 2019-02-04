@@ -3,4 +3,10 @@ function authorized(response) {
   response.end('Authorized');
 }
 
+function successMessage(response, message) {
+  response.writeHead(200, message);
+  response.end(message);
+}
+
 module.exports.authorized = authorized;
+module.exports.successMessage = successMessage;
