@@ -5,6 +5,7 @@ function authorized(response) {
 
 function successMessage(response, message) {
   response.writeHead(200, message);
+  console.log(message);
   response.end(message);
 }
 

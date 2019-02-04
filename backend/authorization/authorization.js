@@ -33,8 +33,7 @@ function signUp(request, response, next) {
     `);
     signUpUser(request.body, (error, status) => {
       if (error) {
-        console.log(error);
-        throw new Error('Technical Error');
+        next(error);
       } else {
         if (status) {
           successMessage(response, 'User Already Exist');
