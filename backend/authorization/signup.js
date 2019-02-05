@@ -1,17 +1,31 @@
 const { successMessage } = require('./../responses/success');
-const {signupUser} = require('./../mongo/mongo');
+const { incorrectRequest } = require('./../responses/error');
+const { isUserExist, insertSingleUser } = require('./../mongo/mongo');
+
+/**
+ * Public API
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ */
 function signup(request, response, next) {
   if (request.method === 'POST' && request.body) {
     doSignup(request, response, next);
   } else {
-    issueWithSignupRequest(next);
+    incorrectRequest('Request not POST or without body.', next);
   }
 }
 
+/**
+ * Private API
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ */
 function doSignup(request, response, next) {
   if (request.body.username && request.body.password) {
     console.log(`
-    User Set =>
+    Signup User Set =>
     Username : ${request.body.username}
     Password : ${request.body.password}
     `);
@@ -24,16 +38,26 @@ function doSignup(request, response, next) {
       }
     });
   } else {
-    issueWithSignupRequest(next);
+    incorrectRequest('Request body missing username or password.', next);
   }
 }
-
-function issueWithSignupRequest(next) {
-  try {
-    throw new Error('Incorrect Request');
-  } catch (error) {
-    next(error);
-  }
+/**
+ * Private API
+ * @param {*} userObject 
+ * @param {*} callback 
+ */
+function signupUser(userObject, callback) {
+  isUserExist(userObject, (error, status) => {
+    if (error) {
+      callback(error);
+    } else {
+      if (status) {
+        callback(undefined, status);
+      } else {
+        insertSingleUser(userObject, callback, status);
+      } 
+    }
+  });
 }
 
 module.exports.signup = signup;

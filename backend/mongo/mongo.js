@@ -3,6 +3,10 @@ const url = 'mongodb://localhost:27017';
 let database;
 let collection;
 
+/**
+ * Public API
+ * @param {*} callback 
+ */
 function initMongo(callback) {
   mongo.connect(url, (error, client) => {
     if (error) {
@@ -14,21 +18,12 @@ function initMongo(callback) {
     }
   });
 }
-
-function signupUser(userObject, callback) {
-  isUserExist(userObject, (error, status) => {
-    if (error) {
-      callback(error);
-    } else {
-      if (status) {
-        callback(undefined, status);
-      } else {
-        insertSingleUser(userObject, callback, status);
-      }
-    }
-  });
-}
-
+/**
+ * Public API
+ * @param {*} userObject 
+ * @param {*} callback 
+ * @param {*} status 
+ */
 function insertSingleUser(userObject, callback, status) {
   collection.insertOne(userObject, (error) => {
     if (error) {
@@ -38,7 +33,11 @@ function insertSingleUser(userObject, callback, status) {
     }
   })
 }
-
+/**
+ * Public API
+ * @param {*} userObject 
+ * @param {*} callback 
+ */
 function isUserExist(userObject, callback) {
   collection.find(userObject).toArray((error, items) => {
     if (error) {
@@ -54,4 +53,5 @@ function isUserExist(userObject, callback) {
 }
 
 module.exports.initMongo = initMongo;
-module.exports.signupUser = signupUser;
+module.exports.insertSingleUser = insertSingleUser;
+module.exports.isUserExist = isUserExist;

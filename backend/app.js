@@ -6,6 +6,9 @@ const { initMongo } = require('./mongo/mongo');
 const app = connect();
 const port = 3000;
 
+/**
+ * Make connection with mongo
+ */
 initMongo((error, status) => {
   if (error) {
     console.log(`Error Handled : ${error.message}`);
@@ -14,6 +17,9 @@ initMongo((error, status) => {
   }
 });
 
+/**
+ * Middlewares with universal error handler
+ */
 app
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))

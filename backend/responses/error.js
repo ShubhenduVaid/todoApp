@@ -3,4 +3,13 @@ function unauthorized(response) {
   response.end('Unauthorized');
 }
 
+function incorrectRequest(message, next) {
+  try {
+    throw new Error(message);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports.unauthorized = unauthorized;
+module.exports.incorrectRequest = incorrectRequest;
