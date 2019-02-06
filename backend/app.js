@@ -2,6 +2,7 @@ const connect = require('connect');
 const bodyParser = require('body-parser');
 const { signup } = require('./authorization/signup');
 const { login } = require('./authorization/login');
+const { todo } = require('./todo/todo');
 const { initMongo } = require('./mongo/mongo');
 const app = connect();
 const port = 3000;
@@ -25,6 +26,7 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use('/signup', signup)
   .use('/login', login)
+  .use('/todo', todo)
   .use((error, req, res, next) => {
     console.log(`Error Handled : ${error.message}`);
     res.writeHead(500);

@@ -1,5 +1,5 @@
 function unauthorized(response) {
-  response.writeHead(401, { 'WWW-Authenticate': 'Basic' });
+  response.writeHead(403, { 'WWW-Authenticate': 'Basic' });
   response.end('Unauthorized');
 }
 
